@@ -25,13 +25,13 @@ CSV_QUOTE_FIELDS = ["text", "author", "tags"]
 CSV_AUTHOR_FIELDS = ["name", "biography", "birthday", "location_born"]
 
 
-def save_links_to_author_page(links: set[str]):
+def write_links_to_author_page(links: set[str]) -> None:
     with open("links_to_author_page.txt", "w") as file:
         for link in links:
             file.write(f"{link}\n")
 
 
-def write_authors_to_csv(authors: list[Author], path: str = "authors.csv"):
+def write_authors_to_csv(authors: list[Author], path: str = "authors.csv") -> None:
     with open(path, "w", newline="", encoding="UTF-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=CSV_AUTHOR_FIELDS)
         writer.writeheader()
@@ -40,7 +40,7 @@ def write_authors_to_csv(authors: list[Author], path: str = "authors.csv"):
             writer.writerow({**author.__dict__})
 
 
-def write_quotes_to_csv(path: str, quotes: list[Quote]):
+def write_quotes_to_csv(path: str, quotes: list[Quote]) -> None:
     with open(path, "w", newline="", encoding="UTF-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=CSV_QUOTE_FIELDS)
         writer.writeheader()
@@ -49,14 +49,14 @@ def write_quotes_to_csv(path: str, quotes: list[Quote]):
             writer.writerow({**quote.__dict__})
 
 
-def get_next_page(soup: BeautifulSoup):
+def get_next_page(soup: BeautifulSoup) -> str | None:
     try:
         return URL + soup.select_one(".pager .next a")["href"]
     except TypeError:
         return None
 
 
-def get_single_quote(quote: Tag):
+def get_single_quote(quote: Tag) -> Quote:
     text = quote.select_one(".text").text
     author = quote.select_one(".author").text
     tags = [tag.text for tag in quote.select(".tag")]
@@ -64,7 +64,7 @@ def get_single_quote(quote: Tag):
     return Quote(text, author, tags)
 
 
-def get_quotes():
+def get_quotes() -> list[Quote]:
     all_quotes = []
     all_authors = set()
 
@@ -82,12 +82,12 @@ def get_quotes():
             a["href"] for a in soup.select(".quote span a")
         )
 
-    save_links_to_author_page(all_authors)
+    write_links_to_author_page(all_authors)
 
     return [get_single_quote(quote) for quote in all_quotes]
 
 
-def get_authors():
+def get_authors() -> list[Author]:
     with open("links_to_author_page.txt", "r") as file:
         links = [link.strip() for link in file.readlines()]
     all_authors = []
