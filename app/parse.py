@@ -99,7 +99,10 @@ def get_authors():
         name = soup.select_one("h3.author-title").text.strip().split("\n")[0]
         biography = soup.select_one(".author-description").text.strip()
         birthday = soup.select_one(".author-born-date").text.strip()
-        location_born = soup.select_one(".author-born-location").text.strip().replace("in ", "")
+        location_born = (
+            soup.select_one(".author-born-location")
+            .text.strip().replace("in ", "")
+        )
         author = Author(
             name=name,
             biography=biography,
