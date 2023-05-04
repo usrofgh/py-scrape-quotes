@@ -31,7 +31,10 @@ def write_links_to_author_page(links: set[str]) -> None:
             file.write(f"{link}\n")
 
 
-def write_authors_to_csv(authors: list[Author], path: str = "authors.csv") -> None:
+def write_authors_to_csv(
+        authors: list[Author],
+        path: str = "authors.csv"
+) -> None:
     with open(path, "w", newline="", encoding="UTF-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=CSV_AUTHOR_FIELDS)
         writer.writeheader()
